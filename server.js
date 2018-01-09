@@ -48,7 +48,7 @@ app.get('/HotsLogs', function(req, res) {
 });
 
 app.get('/NanoPool', function(req, res) {
-    console.log(req.query);
+    //console.log(req.query);
     NanoPoolApi.getMiningStats(req.headers, req.query, function(err, response, data) {
         if (err || response.statusCode != 200) {
             if (err) {

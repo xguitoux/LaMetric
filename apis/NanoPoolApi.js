@@ -27,24 +27,9 @@ module.exports = {
     getMiningStats: function(headers, parameters, callback) {
 
         var walletAdress = parameters.wallet;
-        // var battleTag = parameters.battleTag + "_" + parameters.battleTagNumber;
-        // switch (parameters.Region) {
-        //     case "US":
-        //         regionCode = "1";
-        //         break;
-        //     case "EU":
-        //         regionCode = "2";
-        //         break;
-        //     case "KR":
-        //         regionCode = "4";
-        //         break;
-        //     case "CN":
-        //         regionCode = "5";
-        //         break;
 
-        // }
+        var url = "https://api.nanopool.org/v1/eth/user/" + walletAdress;
 
-        var url = "https://api.nanopool.org/v1/eth/balance/" + walletAdress;
         console.log(url);
         var postHeader = {
             'User-Agent': headers.host,
