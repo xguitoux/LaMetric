@@ -59,15 +59,18 @@ app.get('/NanoPool', function(req, res) {
             }
         }
 
-        var jsonResponse = LaMetricApi.buildNanoResponse(req, data);
+        LaMetricApi.buildNanoResponse(req, data).then(function(jsonResponse) {
+            //            console.log("SERVER.JS dans then : ", jsonResponse);
+            if (!jsonResponse) {
+                console.log("Error NanoPool: ", response.statusCode);
+                res.status(response.statusCode).send(response.body);
+            } else {
+                console.log("Response NanoPool: ", jsonResponse);
+                return res.status(200).json(jsonResponse);
+            }
+        });
 
-        if (!jsonResponse) {
-            console.log("Error NanoPool: ", response.statusCode);
-            res.status(response.statusCode).send(response.body);
-        } else {
-            console.log("Response NanoPool: ", jsonResponse);
-            return res.status(200).json(jsonResponse);
-        }
+        // 
     });
 
 });
