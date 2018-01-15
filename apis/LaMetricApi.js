@@ -88,18 +88,14 @@ module.exports = {
      */
     buildNanoResponse: function(req, dataResp) {
 
-        return new Promise(function(resolve) {
+        return new Promise(function(resolve, reject) {
             // Building object for LaMetric. We will return it
             var responseObj = {};
             responseObj.frames = [];
-
             index = 0;
-            console.log("----------------");
-            console.log(dataResp.data);
-            console.log("----------------");
 
-            if (!dataResp) {
-                return false;
+            if (dataResp.data.balance == undefined) {
+                reject(new Error("No dataResp.data.balance found"));
             } else {
 
                 var nanoBalance = dataResp.data.balance;
@@ -112,7 +108,7 @@ module.exports = {
                 index++;
 
                 var balanceFiatSymbol = "";
-                var coinProm;
+
                 balanceFiatSymbol = req.query.balance_value;
                 // console.log("---balance_value=" + req.query.balance_value);
                 var params = {
@@ -121,17 +117,15 @@ module.exports = {
                     headers: req.headers
                 };
 
-
-                coinProm = NanoPoolApi.getCoinChangeProm(params).then(function(data) {
+                return NanoPoolApi.getCoinChange(params).then(function(data) {
                     console.log();
-                    console.log("-----DANS 1er then");
                     if (!data) {
-                        return "Error";
+                        reject(new Error("NanoPoolApi.getCoinChange - No data found"));
                     } else {
 
                         // console.log("nanoBalance=" + nanoBalance);
                         // console.log("req.query.balance_value=" + balanceFiatSymbol);
-                        var coinValinFiat = JSON.parse(data.body)[balanceFiatSymbol];
+                        var coinValinFiat = data[balanceFiatSymbol];
                         // console.log();
                         // console.log("#######");
                         var balanceValue = nanoBalance * coinValinFiat;
@@ -140,17 +134,25 @@ module.exports = {
 
                         // Dollar icon i34
                         // Euro icon i3213
+                        var fiatIcon = "i34";
+                        switch (balanceFiatSymbol) {
+                            case 'EUR':
+                                fiatIcon = 'i3213';
+                                break;
+                            case 'USD':
+                                fiatIcon = 'i34';
+                                break;
+                        }
+
                         var balanceValueFrame = {
                             'index': index,
                             'text': balanceValue,
-                            'icon': 'i34',
+                            'icon': fiatIcon,
                         };
-                        console.log("balanceValue=" + balanceValue);
-                        console.log(balanceValueFrame);
-
+                        // console.log("balanceValue=" + balanceValue);
+                        // console.log(balanceValueFrame);
                         responseObj.frames.push(balanceValueFrame);
                         index++;
-
                     }
 
                     // Si on doit afficher des hashrates
@@ -206,8 +208,15 @@ module.exports = {
                         });
                     }
                 }).finally(function() {
+                    //resolve(responseObj);
                     resolve(responseObj);
                 });
+
+                // coinProm.then(function(finalObj) {
+
+                //     resolve(finalObj);
+                // });
+                // return null;
             }
         });
     }

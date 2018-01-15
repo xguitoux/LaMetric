@@ -48,29 +48,20 @@ app.get('/HotsLogs', function(req, res) {
 });
 
 app.get('/NanoPool', function(req, res) {
-    //console.log(req.query);
-    NanoPoolApi.getMiningStats(req.headers, req.query, function(err, response, data) {
-        if (err || response.statusCode != 200) {
-            if (err) {
-                console.log(err);
-                return res.status(500).send(err);
-            } else {
-                return res.status(response.statusCode).send(response.body);
-            }
-        }
+    console.log("------------- NanoPool request");
+    console.log(req.query);
+    console.log();
 
-        LaMetricApi.buildNanoResponse(req, data).then(function(jsonResponse) {
-            //            console.log("SERVER.JS dans then : ", jsonResponse);
-            if (!jsonResponse) {
-                console.log("Error NanoPool: ", response.statusCode);
-                res.status(response.statusCode).send(response.body);
-            } else {
-                console.log("Response NanoPool: ", jsonResponse);
-                return res.status(200).json(jsonResponse);
-            }
+    NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
+
+        return LaMetricApi.buildNanoResponse(req, jsonMiningStats).then(function(jsonResponse) {
+
+            console.log("Response NanoPool: ", jsonResponse);
+            return res.status(200).json(jsonResponse);
         });
 
-        // 
+    }).catch(function() {
+        console.log("-------------");
     });
 
 });
@@ -90,10 +81,15 @@ app.use(function(err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    //res.render('error');
+    res.json({ error: err });
 });
 
 app.listen(port, ip);
+console.log("~~~~~~~~~~~~~~");
+console.log("LaMetric apps v3.0beta");
 console.log('Server running on http://%s:%s', ip, port);
+
+console.log("~~~~~~~~~~~~~~");
 
 module.exports = app;
