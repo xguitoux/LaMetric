@@ -87,7 +87,7 @@ app.use(function(err, req, res, next) {
 
 app.listen(port, ip);
 console.log("~~~~~~~~~~~~~~");
-console.log("LaMetric apps v3.0beta");
+console.log("LaMetric apps v3.1beta");
 console.log('Server running on http://%s:%s', ip, port);
 
 console.log("~~~~~~~~~~~~~~");
