@@ -114,10 +114,12 @@ module.exports = {
                 var params = {
                     coin: "ETH",
                     currency: balanceFiatSymbol,
-                    headers: req.headers
+                    query: req.query
+                        /*,
+                                            headers: req.headers*/
                 };
 
-                return NanoPoolApi.getCoinChange(params).then(function(data) {
+                return NanoPoolApi.getCoinChange(req.headers, params).then(function(data) {
                     console.log();
                     if (!data) {
                         reject(new Error("NanoPoolApi.getCoinChange - No data found"));
@@ -129,18 +131,15 @@ module.exports = {
                         // console.log();
                         // console.log("#######");
                         var balanceValue = nanoBalance * coinValinFiat;
-                        // console.log(balanceValue + "€");
                         balanceValue = Number((balanceValue).toFixed(2));
 
-                        // Dollar icon i34
-                        // Euro icon i3213
                         var fiatIcon = "i34";
                         switch (balanceFiatSymbol) {
                             case 'EUR':
-                                fiatIcon = 'i3213';
+                                fiatIcon = 'i3213'; // Euro icon i3213
                                 break;
                             case 'USD':
-                                fiatIcon = 'i34';
+                                fiatIcon = 'i34'; // Dollar icon i34
                                 break;
                         }
 
@@ -178,28 +177,28 @@ module.exports = {
 
                             switch (element) {
                                 case "CurrentHash":
-                                    frame.text = "H:" + hashrate;
-                                    frame.icon = "i5273"; // Diams icon
+                                    frame.text = hashrate;
+                                    frame.icon = "i17329"; // Hrate icon
                                     break;
                                 case "AvgHash1h":
-                                    frame.text = "H1:" + h1hashrate;
-                                    frame.icon = "i5273"; // Diams icon
+                                    frame.text = h1hashrate;
+                                    frame.icon = "i17335"; // H1 icon
                                     break;
                                 case "AvgHash3h":
-                                    frame.text = "H3:" + h3hashrate;
-                                    frame.icon = "i5271"; // Plat icon
+                                    frame.text = h3hashrate;
+                                    frame.icon = "i17336"; // H3 icon
                                     break;
                                 case "AvgHash6h":
-                                    frame.text = "H6:" + h6hashrate;
-                                    frame.icon = "i5274"; // Gold icon
+                                    frame.text = h6hashrate;
+                                    frame.icon = "i17332"; // H6 icon
                                     break;
                                 case "AvgHash12h":
-                                    frame.text = "H12:" + h12hashrate;
-                                    frame.icon = "i5270"; // Silver icon
+                                    frame.text = h12hashrate;
+                                    frame.icon = "i17333"; // H12 icon
                                     break;
                                 case "AvgHash24h":
-                                    frame.text = "H24:" + h24hashrate;
-                                    frame.icon = "i5269"; // Bronze icon
+                                    frame.text = h24hashrate;
+                                    frame.icon = "i17334"; // H24 icon
                                     break;
                             }
 
@@ -208,15 +207,8 @@ module.exports = {
                         });
                     }
                 }).finally(function() {
-                    //resolve(responseObj);
                     resolve(responseObj);
                 });
-
-                // coinProm.then(function(finalObj) {
-
-                //     resolve(finalObj);
-                // });
-                // return null;
             }
         });
     }
