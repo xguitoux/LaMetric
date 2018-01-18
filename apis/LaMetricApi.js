@@ -94,6 +94,8 @@ module.exports = {
             responseObj.frames = [];
             index = 0;
 
+            console.log();
+            console.log("dataResp.data.balance=" + dataResp.data.balance);
             if (dataResp.data.balance == undefined) {
                 reject(new Error("No dataResp.data.balance found"));
             } else {
@@ -110,7 +112,6 @@ module.exports = {
                 var balanceFiatSymbol = "";
 
                 balanceFiatSymbol = req.query.balance_value;
-                // console.log("---balance_value=" + req.query.balance_value);
                 var params = {
                     coin: "ETH",
                     currency: balanceFiatSymbol,

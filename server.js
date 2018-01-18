@@ -6,7 +6,8 @@ var express = require('express'),
     app = express(),
     HotsLogApi = require('./apis/HotsLogsApi'),
     LaMetricApi = require('./apis/LaMetricApi'),
-    NanoPoolApi = require('./apis/NanoPoolApi');
+    NanoPoolApi = require('./apis/NanoPoolApi'),
+    moment = require('moment');
 
 var port = process.env.PORT || 8080,
     ip = process.env.IP || '0.0.0.0';
@@ -48,20 +49,22 @@ app.get('/HotsLogs', function(req, res) {
 });
 
 app.get('/NanoPool', function(req, res) {
-    console.log("------------- NanoPool request");
-    console.log(req.query);
     console.log();
+    console.log("------------- NanoPool request at " + moment().format());
+    console.log(req.query);
 
     NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
 
         return LaMetricApi.buildNanoResponse(req, jsonMiningStats).then(function(jsonResponse) {
 
-            console.log("Response NanoPool: ", jsonResponse);
+            console.log("To LaMetric : ", jsonResponse);
+            console.log();
             return res.status(200).json(jsonResponse);
         });
 
-    }).catch(function() {
-        console.log("-------------");
+    }).catch(function(err) {
+        console.log("-----CATCH--------");
+        console.log(err);
     });
 
 });
@@ -87,9 +90,9 @@ app.use(function(err, req, res, next) {
 
 app.listen(port, ip);
 console.log("~~~~~~~~~~~~~~");
-console.log("LaMetric apps v3.1beta");
+console.log("LaMetric apps v2.0beta");
+console.log("Nanopool app v4.0beta");
 console.log('Server running on http://%s:%s', ip, port);
-
 console.log("~~~~~~~~~~~~~~");
 
 module.exports = app;

@@ -16,7 +16,8 @@
         "express": "~4.15.5",
         "morgan": "~1.9.0",
         "request": "~2.83.0",
-        "bluebird": "latest"
+        "bluebird": "latest",
+        "moment": "latest"
     },
     "repository": {
         "type": "git",

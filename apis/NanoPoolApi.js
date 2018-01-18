@@ -23,6 +23,8 @@ module.exports = {
                 var jsonBody = JSON.parse(body);
 
                 if (!error && response.statusCode == 200) {
+                    // console.log("+++++++++++++");
+                    // console.log(queryParams);
                     resolve(jsonBody);
                 } else {
                     console.log("_______________________");
