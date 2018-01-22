@@ -10,18 +10,18 @@ var express = require('express'),
     moment = require('moment'),
     session = require('express-session');
 
-var port = process.env.PORT || 8081,
+var port = process.env.PORT || 8080,
     ip = process.env.IP || '0.0.0.0';
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true
-}))
+// app.use(session({
+//     secret: 'keyboard cat',
+//     resave: false,
+//     saveUninitialized: true
+// }))
 
 
 app.get('/env', function(req, res) {
@@ -56,9 +56,9 @@ app.get('/HotsLogs', function(req, res) {
 
 app.get('/NanoPool', function(req, res) {
 
-    if (!req.session.wallet) {
-        req.session.wallet = {}
-    }
+    // if (!req.session.wallet) {
+    //     req.session.wallet = {}
+    // }
 
     console.log();
     console.log("------------- NanoPool request at " + moment().format());

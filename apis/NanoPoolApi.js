@@ -1,6 +1,5 @@
 var request = require('request');
 var Promise = require("bluebird");
-var NanoPoolApi = require('./NanoPoolApi')
 module.exports = {
     /**
      * Method: getData
