@@ -17,7 +17,8 @@
         "morgan": "~1.9.0",
         "request": "~2.83.0",
         "bluebird": "latest",
-        "moment": "latest"
+        "moment": "latest",
+        "express-session": "latest"
     },
     "repository": {
         "type": "git",

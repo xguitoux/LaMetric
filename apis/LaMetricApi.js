@@ -94,8 +94,8 @@ module.exports = {
             responseObj.frames = [];
             index = 0;
 
-            console.log();
-            console.log("dataResp.data.balance=" + dataResp.data.balance);
+            // console.log();
+            // console.log("dataResp.data.balance=" + dataResp.data.balance);
             if (dataResp.data.balance == undefined) {
                 reject(new Error("No dataResp.data.balance found"));
             } else {

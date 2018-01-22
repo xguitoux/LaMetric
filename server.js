@@ -7,15 +7,21 @@ var express = require('express'),
     HotsLogApi = require('./apis/HotsLogsApi'),
     LaMetricApi = require('./apis/LaMetricApi'),
     NanoPoolApi = require('./apis/NanoPoolApi'),
-    moment = require('moment');
+    moment = require('moment'),
+    session = require('express-session');
 
-var port = process.env.PORT || 8080,
+var port = process.env.PORT || 8081,
     ip = process.env.IP || '0.0.0.0';
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+}))
 
 
 app.get('/env', function(req, res) {
@@ -49,14 +55,25 @@ app.get('/HotsLogs', function(req, res) {
 });
 
 app.get('/NanoPool', function(req, res) {
+
+    if (!req.session.wallet) {
+        req.session.wallet = {}
+    }
+
     console.log();
     console.log("------------- NanoPool request at " + moment().format());
     console.log(req.query);
+    console.log("------------------------------------------");
+    console.log(req.query.wallet);
+    // console.log(req.session.wallet);
+
+    console.log("------------------------------------------");
+    // console.log(req.session);
 
     NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
 
         return LaMetricApi.buildNanoResponse(req, jsonMiningStats).then(function(jsonResponse) {
-
+            req.session.wallet = jsonResponse;
             console.log("To LaMetric : ", jsonResponse);
             console.log();
             return res.status(200).json(jsonResponse);
