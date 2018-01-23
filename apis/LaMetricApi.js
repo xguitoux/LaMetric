@@ -48,11 +48,26 @@ module.exports = {
 
                         var frame = {
                             'index': index,
-                            'text': element.GameMode,
+                            'text': "",
                             'icon': 'i280',
                         };
                         index++;
 
+                        switch (element.GameMode) {
+                            case "QuickMatch":
+                                frame.text = "Q-Match";
+                                break;
+                            case "HeroLeague":
+                                frame.text = "H-League";
+                                break;
+                            case "TeamLeague":
+                                frame.text = "T-League";
+                                break;
+                            case "UnrankedDraft":
+                                frame.text = "Unranked";
+                                break;
+
+                        }
                         switch (element.LeagueID) {
                             case 0:
                                 frame.icon = "i635"; // Master icon
