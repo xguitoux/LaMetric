@@ -30,26 +30,22 @@ app.get('/env', function(req, res) {
 
 // HotsLogs app
 app.get('/HotsLogs', function(req, res) {
+    console.log();
+    console.log("------------- HotsLogs request at " + moment().format());
     console.log(req.query);
-    HotsLogApi.getPlayerStats(req.headers, req.query, function(err, response, data) {
-        if (err || response.statusCode != 200) {
-            if (err) {
-                console.log(err);
-                return res.status(500).send(err);
-            } else {
-                return res.status(response.statusCode).send(response.body);
-            }
-        }
+    console.log("------------------------------------------");
+    HotsLogApi.getPlayerStats(req.headers, req.query).then(function(jsonHots) {
 
-        var jsonResponse = LaMetricApi.buildResponse(req, data);
-
-        if (!jsonResponse) {
-            console.log("Error HotsLogs: ", response.statusCode);
-            res.status(response.statusCode).send(response.body);
-        } else {
-            console.log("Response HotsLogs: ", jsonResponse);
+        return LaMetricApi.buildHotsResponse(req, jsonHots).then(function(jsonResponse) {
+            console.log("To LaMetric : ", jsonResponse);
+            console.log();
             return res.status(200).json(jsonResponse);
-        }
+        });
+
+
+    }).catch(function(err) {
+        console.log("-----HotsLogs CATCH--------");
+        console.log(err);
     });
 
 });
@@ -67,7 +63,7 @@ app.get('/NanoPool', function(req, res) {
     //console.log(req.query.wallet);
     // console.log(req.session.wallet);
 
-    console.log("------------------------------------------");
+    // console.log("------------------------------------------");
     // console.log(req.session);
 
     NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
@@ -80,7 +76,7 @@ app.get('/NanoPool', function(req, res) {
         });
 
     }).catch(function(err) {
-        console.log("-----CATCH--------");
+        console.log("-----NanoPool CATCH--------");
         console.log(err);
     });
 
@@ -109,6 +105,7 @@ app.listen(port, ip);
 console.log("~~~~~~~~~~~~~~");
 console.log("LaMetric apps v2.0beta");
 console.log("Nanopool app v4.0beta");
+console.log("HotsLogs app v3.0");
 console.log('Server running on http://%s:%s', ip, port);
 console.log("~~~~~~~~~~~~~~");
 

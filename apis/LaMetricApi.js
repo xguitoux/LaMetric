@@ -22,63 +22,64 @@ module.exports = {
      * returns LaMetric readable Json
      */
     buildHotsResponse: function(req, data) {
+        return new Promise(function(resolve, reject) {
 
-        // Building object for LaMetric. We will return it
-        var responseObj = {};
-        responseObj.frames = [];
+            if (!data) {
+                reject(new Error("No Hots data found"));
+            } else {
 
-        index = 0;
+                // Building object for LaMetric. We will return it
+                var responseObj = {};
+                responseObj.frames = [];
 
-        var leagues = req.query.leagues.split(',');
-        var spaceLessLeagues = [];
-        // Removing white spaces
-        leagues.forEach(element => {
+                index = 0;
 
-            element = element.replace(/\s+/g, '');
-            spaceLessLeagues.push(element);
-        });
+                var leagues = req.query.leagues.split(',');
+                var spaceLessLeagues = [];
+                // Removing white spaces
+                leagues.forEach(element => {
 
-        if (!data) {
-            return false;
-        } else {
+                    element = element.replace(/\s+/g, '');
+                    spaceLessLeagues.push(element);
+                });
+                data.LeaderboardRankings.forEach(element => {
 
-            data.LeaderboardRankings.forEach(element => {
+                    if (spaceLessLeagues.indexOf(element.GameMode) >= 0) {
 
-                if (spaceLessLeagues.indexOf(element.GameMode) >= 0) {
+                        var frame = {
+                            'index': index,
+                            'text': element.GameMode,
+                            'icon': 'i280',
+                        };
+                        index++;
 
-                    var frame = {
-                        'index': index,
-                        'text': element.GameMode,
-                        'icon': 'i280',
-                    };
-                    index++;
-
-                    switch (element.LeagueID) {
-                        case 0:
-                            frame.icon = "i635"; // Master icon
-                            break;
-                        case 1:
-                            frame.icon = "i5273"; // Diams icon
-                            break;
-                        case 2:
-                            frame.icon = "i5271"; // Plat icon
-                            break;
-                        case 3:
-                            frame.icon = "i5274"; // Gold icon
-                            break;
-                        case 4:
-                            frame.icon = "i5270"; // Silver icon
-                            break;
-                        case 5:
-                            frame.icon = "i5269"; // Bronze icon
-                            break;
+                        switch (element.LeagueID) {
+                            case 0:
+                                frame.icon = "i635"; // Master icon
+                                break;
+                            case 1:
+                                frame.icon = "i5273"; // Diams icon
+                                break;
+                            case 2:
+                                frame.icon = "i5271"; // Plat icon
+                                break;
+                            case 3:
+                                frame.icon = "i5274"; // Gold icon
+                                break;
+                            case 4:
+                                frame.icon = "i5270"; // Silver icon
+                                break;
+                            case 5:
+                                frame.icon = "i5269"; // Bronze icon
+                                break;
+                        }
+                        responseObj.frames.push(frame);
                     }
-                    responseObj.frames.push(frame);
-                }
-            });
+                });
 
-            return responseObj;
-        }
+                resolve(responseObj);
+            }
+        });
     },
 
     /**

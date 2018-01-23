@@ -18,7 +18,8 @@
         "request": "~2.83.0",
         "bluebird": "latest",
         "moment": "latest",
-        "express-session": "latest"
+        "express-session": "latest",
+        "util": "latest"
     },
     "repository": {
         "type": "git",
