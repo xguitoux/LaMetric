@@ -1,5 +1,5 @@
 // import { isNullOrUndefined } from 'util';
-const util = require('util');
+var util = require('util');
 var request = require('request');
 var Promise = require("bluebird");
 module.exports = {
@@ -24,10 +24,7 @@ module.exports = {
             }, function(error, response, body) {
                 var jsonBody = JSON.parse(body);
 
-                // console.log("jsonBody");
-                // console.log(util.isNullOrUndefined(jsonBody));
-                // console.log("------------");
-                // console.log(error);
+
                 if (util.isNullOrUndefined(jsonBody)) {
                     reject(new Error("JsonApi.getData - null response"));
                 } else
@@ -35,10 +32,8 @@ module.exports = {
 
                     resolve(jsonBody);
                 } else {
-                    console.log("** Error getData - " + jsonBody.error);
-                    console.log("** url : " + url);
-                    // console.log(queryParams);
-                    //return parent.getData(url, headers, queryParams);
+                    // console.log("** Error getData - " + jsonBody.error);
+                    // console.log("** url : " + url);
                     reject(new Error(jsonBody.error));
                 }
             });

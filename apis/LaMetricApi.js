@@ -32,7 +32,14 @@ module.exports = {
                 var responseObj = {};
                 responseObj.frames = [];
 
-                index = 0;
+
+                var frame = {
+                    'index': 0,
+                    'text': req.query.battleTag,
+                    'icon': 'i14830',
+                };
+                responseObj.frames.push(frame);
+                index = 1;
 
                 var leagues = req.query.leagues.split(',');
                 var spaceLessLeagues = [];
@@ -55,16 +62,16 @@ module.exports = {
 
                         switch (element.GameMode) {
                             case "QuickMatch":
-                                frame.text = "Q-Match";
+                                frame.text = "QM";
                                 break;
                             case "HeroLeague":
-                                frame.text = "H-League";
+                                frame.text = "HeroL";
                                 break;
                             case "TeamLeague":
-                                frame.text = "T-League";
+                                frame.text = "TeamL";
                                 break;
                             case "UnrankedDraft":
-                                frame.text = "Unranked";
+                                frame.text = "URD";
                                 break;
 
                         }

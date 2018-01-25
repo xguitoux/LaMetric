@@ -8,10 +8,15 @@ var express = require('express'),
     LaMetricApi = require('./apis/LaMetricApi'),
     NanoPoolApi = require('./apis/NanoPoolApi'),
     moment = require('moment'),
+    defaultJson = require('./json/defaultValues'),
     session = require('express-session');
 
 var port = process.env.PORT || 8080,
     ip = process.env.IP || '0.0.0.0';
+
+function isEmptyObject(obj) {
+    return !Object.keys(obj).length;
+}
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -34,20 +39,27 @@ app.get('/HotsLogs', function(req, res) {
     console.log("------------- HotsLogs request at " + moment().format());
     console.log(req.query);
     console.log("------------------------------------------");
-    HotsLogApi.getPlayerStats(req.headers, req.query).then(function(jsonHots) {
 
-        return LaMetricApi.buildHotsResponse(req, jsonHots).then(function(jsonResponse) {
-            console.log("To LaMetric : ", jsonResponse);
-            console.log();
-            return res.status(200).json(jsonResponse);
+    // Default display in App Store
+    if (isEmptyObject(req.query)) {
+
+        res.status(200).json(JSON.parse(defaultJson.defaultHots));
+    } else {
+
+        HotsLogApi.getPlayerStats(req.headers, req.query).then(function(jsonHots) {
+
+            return LaMetricApi.buildHotsResponse(req, jsonHots).then(function(jsonResponse) {
+                console.log("To LaMetric : ", jsonResponse);
+                console.log();
+                return res.status(200).json(jsonResponse);
+            });
+
+
+        }).catch(function(err) {
+            console.log("-----HotsLogs CATCH--------");
+            console.log(err);
         });
-
-
-    }).catch(function(err) {
-        console.log("-----HotsLogs CATCH--------");
-        console.log(err);
-    });
-
+    }
 });
 
 app.get('/NanoPool', function(req, res) {
