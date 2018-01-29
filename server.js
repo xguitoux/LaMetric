@@ -7,6 +7,7 @@ var express = require('express'),
     HotsLogApi = require('./apis/HotsLogsApi'),
     LaMetricApi = require('./apis/LaMetricApi'),
     NanoPoolApi = require('./apis/NanoPoolApi'),
+    CryptoApi = require('./apis/CryptoApi'),
     moment = require('moment'),
     defaultJson = require('./json/defaultValues'),
     session = require('express-session');
@@ -54,7 +55,6 @@ app.get('/HotsLogs', function(req, res) {
                 return res.status(200).json(jsonResponse);
             });
 
-
         }).catch(function(err) {
             console.log("-----HotsLogs CATCH--------");
             console.log(err);
@@ -62,21 +62,34 @@ app.get('/HotsLogs', function(req, res) {
     }
 });
 
-app.get('/NanoPool', function(req, res) {
+app.get('/EthWallet', function(req, res) {
+    console.log();
+    console.log("------------- EthWallet request at " + moment().format());
+    console.log(req.query);
+    console.log("------------------------------------------");
 
-    // if (!req.session.wallet) {
-    //     req.session.wallet = {}
-    // }
+    //console.log(req.query.wallet);
+
+    CryptoApi.getEthBalance(req.headers, req.query).then(function(walletBalance) {
+        return LaMetricApi.buildEthResponse(req, walletBalance).then(function(jsonResponse) {
+            //req.session.wallet = jsonResponse;
+            console.log("To LaMetric : ", jsonResponse);
+            console.log();
+            return res.status(200).json(jsonResponse);
+        });
+
+    }).catch(function(err) {
+        console.log("-----EthWallet CATCH--------");
+        console.log(err);
+    });
+});
+
+app.get('/NanoPool', function(req, res) {
 
     console.log();
     console.log("------------- NanoPool request at " + moment().format());
     console.log(req.query);
     console.log("------------------------------------------");
-    //console.log(req.query.wallet);
-    // console.log(req.session.wallet);
-
-    // console.log("------------------------------------------");
-    // console.log(req.session);
 
     NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
 
@@ -114,11 +127,12 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(port, ip);
-console.log("~~~~~~~~~~~~~~");
-console.log("LaMetric apps v2.0beta");
-console.log("Nanopool app v4.0beta");
-console.log("HotsLogs app v3.0");
+console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+console.log("LaMetric  apps v2.0");
+console.log("Nanopool  app v4.0beta");
+console.log("HotsLogs  app v3.0");
+console.log("EthWallet app v1.0");
 console.log('Server running on http://%s:%s', ip, port);
-console.log("~~~~~~~~~~~~~~");
+console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
 module.exports = app;

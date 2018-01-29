@@ -25,4 +25,4 @@ module.exports = {
 
         return jsonApi.getData(url, headers, parameters);
     },
-}
+};

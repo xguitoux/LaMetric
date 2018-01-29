@@ -1,6 +1,7 @@
 /*jshint esversion: 6 */
 var Promise = require("bluebird");
 var NanoPoolApi = require('./NanoPoolApi');
+var CryptoApi = require("./CryptoApi");
 
 Promise.config({
     // Enable warnings
@@ -31,7 +32,6 @@ module.exports = {
                 // Building object for LaMetric. We will return it
                 var responseObj = {};
                 responseObj.frames = [];
-
 
                 var frame = {
                     'index': 0,
@@ -105,6 +105,75 @@ module.exports = {
     },
 
     /**
+     * Method: buildEthResponse
+     * @return json
+     * returns LaMetric readable Json
+     */
+    buildEthResponse: function(req, walletBalance) {
+        return new Promise(function(resolve, reject) {
+            // Building object for LaMetric. We will return it
+            var responseObj = {};
+            responseObj.frames = [];
+            index = 0;
+            console.log("buildEthResponse");
+            console.log(walletBalance);
+
+            var walletFrame = {
+                'index': 0,
+                'text': walletBalance,
+                'icon': "i11862",
+            };
+            responseObj.frames.push(walletFrame);
+
+            var balanceFiatSymbol = req.query.balance_value;
+            var params = {
+                coin: "ETH",
+                currency: balanceFiatSymbol,
+                query: req.query
+            };
+
+            return CryptoApi.getCoinChangeProm(req.headers, params).then(function(data) {
+                console.log("----------CryptoApi.getCoinChangeProm");
+                console.log(data);
+                if (!data) {
+                    reject(new Error("LaMetric.getCoinChange - No data found"));
+                } else {
+
+                    // console.log("nanoBalance=" + nanoBalance);
+                    // console.log("req.query.balance_value=" + balanceFiatSymbol);
+                    var coinValinFiat = data[balanceFiatSymbol];
+                    var balanceValue = walletBalance * coinValinFiat;
+                    balanceValue = Number((balanceValue).toFixed(2));
+
+                    var fiatIcon = "i34";
+                    switch (balanceFiatSymbol) {
+                        case 'EUR':
+                            fiatIcon = 'i3213'; // Euro icon i3213
+                            break;
+                        case 'USD':
+                            fiatIcon = 'i34'; // Dollar icon i34
+                            break;
+                        case 'BTC':
+                            fiatIcon = 'i12460'; // Bitcoin icon i12460
+                            break;
+                    }
+
+                    var balanceValueFrame = {
+                        'index': 1,
+                        'text': balanceValue,
+                        'icon': fiatIcon,
+                    };
+                    // console.log("balanceValue=" + balanceValue);
+                    // console.log(balanceValueFrame);
+                    responseObj.frames.push(balanceValueFrame);
+                    resolve(responseObj);
+                }
+            });
+
+        });
+    },
+
+    /**
      * Method: buildNanoResponse
      * @return json
      * returns LaMetric readable Json
@@ -132,9 +201,9 @@ module.exports = {
                 responseObj.frames.push(balanceFrame);
                 index++;
 
-                var balanceFiatSymbol = "";
+                //var balanceFiatSymbol = "";
 
-                balanceFiatSymbol = req.query.balance_value;
+                var balanceFiatSymbol = req.query.balance_value;
                 var params = {
                     coin: "ETH",
                     currency: balanceFiatSymbol,
@@ -143,7 +212,7 @@ module.exports = {
                                             headers: req.headers*/
                 };
 
-                return NanoPoolApi.getCoinChange(req.headers, params).then(function(data) {
+                return cryptoApi.getCoinChange(req.headers, params).then(function(data) {
                     console.log();
                     if (!data) {
                         reject(new Error("NanoPoolApi.getCoinChange - No data found"));
@@ -152,8 +221,6 @@ module.exports = {
                         // console.log("nanoBalance=" + nanoBalance);
                         // console.log("req.query.balance_value=" + balanceFiatSymbol);
                         var coinValinFiat = data[balanceFiatSymbol];
-                        // console.log();
-                        // console.log("#######");
                         var balanceValue = nanoBalance * coinValinFiat;
                         balanceValue = Number((balanceValue).toFixed(2));
 

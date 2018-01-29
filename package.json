@@ -16,10 +16,12 @@
         "express": "~4.15.5",
         "morgan": "~1.9.0",
         "request": "~2.83.0",
+        "request-promise": "latest",
         "bluebird": "latest",
         "moment": "latest",
         "express-session": "latest",
-        "util": "latest"
+        "util": "latest",
+        "web3": "0.20.4"
     },
     "repository": {
         "type": "git",

@@ -1,11 +1,14 @@
 var request = require('request');
 var Promise = require("bluebird");
 var jsonApi = require("./JsonApi");
+
+
 module.exports = {
 
     getMiningStats: function(headers, parameters) {
         var url = "https://api.nanopool.org/v1/eth/user/" + parameters.wallet;
         var self = this;
+
         var dataProm = jsonApi.getData(url, headers, parameters).catch(function(err) {
             console.log("## Error getMiningStats - " + err);
             // console.log(typeof(err));
@@ -30,10 +33,10 @@ module.exports = {
         // });
         return dataProm;
     },
-    getCoinChange: function(headers, parameters) {
-        var url = " https://min-api.cryptocompare.com/data/price?fsym=" + parameters.coin + "&tsyms=" + parameters.currency;
+    // getCoinChange: function(headers, parameters) {
+    //     var url = " https://min-api.cryptocompare.com/data/price?fsym=" + parameters.coin + "&tsyms=" + parameters.currency;
 
-        return jsonApi.getData(url, headers, parameters);
+    //     return jsonApi.getData(url, headers, parameters);
 
-    },
+    // },
 };
