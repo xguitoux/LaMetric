@@ -1,6 +1,5 @@
 /*jshint esversion: 6 */
 var JsonApi = require("./JsonApi");
-
 var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider("https://api.myetherapi.com/eth"));
 
@@ -38,4 +37,8 @@ module.exports = {
 
         return JsonApi.getDataProm(url, headers, parameters);
     },
+
+    isValidEthWallet(wallet) {
+        return web3.isAddress(wallet);
+    }
 };

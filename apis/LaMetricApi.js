@@ -118,8 +118,14 @@ module.exports = {
             console.log("buildEthResponse");
             console.log(walletBalance);
 
-            var walletFrame = {
+            var walletIntroFrame = {
                 'index': 0,
+                'text': "Eth wallet",
+                'icon': null,
+            };
+            responseObj.frames.push(walletIntroFrame);
+            var walletFrame = {
+                'index': 1,
                 'text': walletBalance,
                 'icon': "i11862",
             };
@@ -159,7 +165,7 @@ module.exports = {
                     }
 
                     var balanceValueFrame = {
-                        'index': 1,
+                        'index': 2,
                         'text': balanceValue,
                         'icon': fiatIcon,
                     };

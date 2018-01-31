@@ -11,36 +11,38 @@ var defaultHots = `
         "index": 1,
         "text": "Hero",
         "icon": "i635"
-    }
-]
+    }]
 }`;
 
 var defaultNano = `
 {
-"frames": [{
-    "index": 0,
-    "text": "ERROR",
-    "icon": "i2493"
-}]
+    "frames": [
+    {
+        "index": 0,
+        "text": "ERROR",
+        "icon": "i2493"
+    }]
 }`;
 
 var defaultEthWallet = `
 {
 "frames": [
     {
-        "index": 0,
-        "text": "12.56",
-        "icon": "i11862"
-    },
+        "text": "Enter your wallet address",
+        "icon": "i555"
+    }]
+}`;
+var errorEthWallet = `
+{
+    "frames": [
     {
-        "index": 1,
-        "text": "1398.152",
-        "icon": "i34"
-    }
-]
+        "text": "Enter good wallet address",
+        "icon": "i555"
+    }]
 }`;
 module.exports = {
     defaultHots,
-
-    defaultNano
+    defaultNano,
+    defaultEthWallet,
+    errorEthWallet
 };

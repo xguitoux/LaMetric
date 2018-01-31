@@ -69,19 +69,25 @@ app.get('/EthWallet', function(req, res) {
     console.log("------------------------------------------");
 
     //console.log(req.query.wallet);
+    if (isEmptyObject(req.query)) {
+        return res.status(200).json(JSON.parse(defaultJson.defaultEthWallet));
+    } else
+    if (CryptoApi.isValidEthWallet(req.query.wallet)) {
+        console.log("valid address");
+        CryptoApi.getEthBalance(req.headers, req.query).then(function(walletBalance) {
+            return LaMetricApi.buildEthResponse(req, walletBalance).then(function(jsonResponse) {
+                console.log("To LaMetric : ", jsonResponse);
+                console.log();
+                return res.status(200).json(jsonResponse);
+            });
 
-    CryptoApi.getEthBalance(req.headers, req.query).then(function(walletBalance) {
-        return LaMetricApi.buildEthResponse(req, walletBalance).then(function(jsonResponse) {
-            //req.session.wallet = jsonResponse;
-            console.log("To LaMetric : ", jsonResponse);
-            console.log();
-            return res.status(200).json(jsonResponse);
+        }).catch(function(err) {
+            console.log("-----EthWallet CATCH--------");
+            console.log(err);
         });
-
-    }).catch(function(err) {
-        console.log("-----EthWallet CATCH--------");
-        console.log(err);
-    });
+    } else {
+        return res.status(200).json(JSON.parse(defaultJson.errorEthWallet));
+    }
 });
 
 app.get('/NanoPool', function(req, res) {
