@@ -133,7 +133,7 @@ module.exports = {
             };
 
             return CryptoApi.getCoinChangeProm(req.headers, params).then(function(data) {
-                console.log("----------CryptoApi.getCoinChangeProm");
+                console.log("----------CryptoApi.getCoinChangeProm-");
                 console.log(data);
                 if (!data) {
                     reject(new Error("LaMetric.getCoinChange - No data found"));
@@ -212,7 +212,7 @@ module.exports = {
                                             headers: req.headers*/
                 };
 
-                return cryptoApi.getCoinChange(req.headers, params).then(function(data) {
+                return CryptoApi.getCoinChange(req.headers, params).then(function(data) {
                     console.log();
                     if (!data) {
                         reject(new Error("NanoPoolApi.getCoinChange - No data found"));
