@@ -13,11 +13,7 @@ module.exports = {
 
             web3.eth.getBalance(parameters.wallet, function(error, result) {
                 if (!error) {
-
-                    // console.log("______________");
-                    // var res = web3.fromWei(result, 'ether');
                     var walletBalance = web3.fromWei(result, 'ether').toNumber();
-                    // console.log(walletBalance);
                     resolve(walletBalance);
                 } else {
                     console.error(error);
@@ -31,13 +27,6 @@ module.exports = {
 
         return JsonApi.getData(url, headers, parameters);
     },
-
-    getCoinChangeProm: function(headers, parameters) {
-        var url = " https://min-api.cryptocompare.com/data/price?fsym=" + parameters.coin + "&tsyms=" + parameters.currency;
-
-        return JsonApi.getDataProm(url, headers, parameters);
-    },
-
     isValidEthWallet(wallet) {
         return web3.isAddress(wallet);
     }
