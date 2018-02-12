@@ -261,7 +261,7 @@ module.exports = {
 
                         var balanceValueFrame = {
                             'index': index,
-                            'text': balanceValue,
+                            'text': balanceValue.toString(),
                             'icon': fiatIcon,
                         };
                         // console.log("balanceValue=" + balanceValue);
