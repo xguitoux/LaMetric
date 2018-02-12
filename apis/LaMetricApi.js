@@ -1,7 +1,9 @@
 /*jshint esversion: 6 */
-var Promise = require("bluebird");
-var NanoPoolApi = require('./NanoPoolApi');
-var CryptoApi = require("./CryptoApi");
+var Promise = require("bluebird"),
+    NanoPoolApi = require('./NanoPoolApi'),
+    CryptoApi = require("./CryptoApi"),
+    jsonValues = require('../consts/jsonValues'),
+    iconValues = require('../consts/iconValues');
 
 Promise.config({
     // Enable warnings
@@ -33,13 +35,11 @@ module.exports = {
                 var responseObj = {};
                 responseObj.frames = [];
 
-                var frame = {
+                responseObj.frames.push({
                     'index': 0,
                     'text': req.query.battleTag,
                     'icon': 'i14830',
-                };
-                responseObj.frames.push(frame);
-                index = 1;
+                });
 
                 var leagues = req.query.leagues.split(',');
                 var spaceLessLeagues = [];
@@ -49,53 +49,66 @@ module.exports = {
                     element = element.replace(/\s+/g, '');
                     spaceLessLeagues.push(element);
                 });
+
+                var index = 1;
                 data.LeaderboardRankings.forEach(element => {
 
                     if (spaceLessLeagues.indexOf(element.GameMode) >= 0) {
 
+                        responseObj.frames.push({
+                            'index': index,
+                            'text': element.GameMode,
+                            'icon': null,
+                        });
+                        index++;
+                        // switch (element.GameMode) {
+                        //     case "QuickMatch":
+                        //         frame.text = "QM";
+                        //         break;
+                        //     case "HeroLeague":
+                        //         frame.text = "HeroL";
+                        //         break;
+                        //     case "TeamLeague":
+                        //         frame.text = "TeamL";
+                        //         break;
+                        //     case "UnrankedDraft":
+                        //         frame.text = "URD";
+                        //         break;
+
+                        // }
                         var frame = {
                             'index': index,
                             'text': "",
-                            'icon': 'i280',
+                            'icon': null,
                         };
-                        index++;
-
-                        switch (element.GameMode) {
-                            case "QuickMatch":
-                                frame.text = "QM";
-                                break;
-                            case "HeroLeague":
-                                frame.text = "HeroL";
-                                break;
-                            case "TeamLeague":
-                                frame.text = "TeamL";
-                                break;
-                            case "UnrankedDraft":
-                                frame.text = "URD";
-                                break;
-
-                        }
                         switch (element.LeagueID) {
                             case 0:
+                                frame.text = "Master";
                                 frame.icon = "i635"; // Master icon
                                 break;
                             case 1:
                                 frame.icon = "i5273"; // Diams icon
+                                frame.text = "Diams";
                                 break;
                             case 2:
                                 frame.icon = "i5271"; // Plat icon
+                                frame.text = "Plat";
                                 break;
                             case 3:
                                 frame.icon = "i5274"; // Gold icon
+                                frame.text = "Gold";
                                 break;
                             case 4:
                                 frame.icon = "i5270"; // Silver icon
+                                frame.text = "Silver";
                                 break;
                             case 5:
                                 frame.icon = "i5269"; // Bronze icon
+                                frame.text = "Bronze";
                                 break;
                         }
                         responseObj.frames.push(frame);
+                        index++;
                     }
                 });
 
@@ -115,19 +128,12 @@ module.exports = {
             var responseObj = {};
             responseObj.frames = [];
             index = 0;
-            console.log("buildEthResponse");
-            console.log(walletBalance);
 
-            var walletIntroFrame = {
-                'index': 0,
-                'text': "Eth wallet",
-                'icon': null,
-            };
-            responseObj.frames.push(walletIntroFrame);
+            responseObj.frames.push(jsonValues.walletIntroFrame);
             var walletFrame = {
                 'index': 1,
                 'text': walletBalance,
-                'icon': "i11862",
+                'icon': iconValues.ethSymbol,
             };
             responseObj.frames.push(walletFrame);
 
@@ -138,8 +144,8 @@ module.exports = {
                 query: req.query
             };
 
-            return CryptoApi.getCoinChangeProm(req.headers, params).then(function(data) {
-                console.log("----------CryptoApi.getCoinChangeProm-");
+            return CryptoApi.getCoinChange(req.headers, params).then(function(data) {
+                console.log("----------CryptoApi.getCoinChange-");
                 console.log(data);
                 if (!data) {
                     reject(new Error("LaMetric.getCoinChange - No data found"));
@@ -174,6 +180,9 @@ module.exports = {
                     responseObj.frames.push(balanceValueFrame);
                     resolve(responseObj);
                 }
+            }).catch(function(err) {
+                console.log("Error buildEthResponse");
+                console.log(err);
             });
 
         });
@@ -194,8 +203,18 @@ module.exports = {
 
             // console.log();
             // console.log("dataResp.data.balance=" + dataResp.data.balance);
-            if (dataResp.data.balance == undefined) {
-                reject(new Error("No dataResp.data.balance found"));
+
+            if (dataResp == undefined) {
+                reject(new Error("LametricApi.buildNanoResponse No data found"));
+            } else if (dataResp.data == undefined) {
+
+                var jsonResp = JSON.parse(dataResp);
+                console.log(jsonResp.frames);
+                if (jsonResp.frames) {
+                    resolve(jsonResp);
+                } else {
+
+                }
             } else {
 
                 var nanoBalance = dataResp.data.balance;
