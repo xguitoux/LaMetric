@@ -9,7 +9,7 @@ var express = require('express'),
     NanoPoolApi = require('./apis/NanoPoolApi'),
     CryptoApi = require('./apis/CryptoApi'),
     moment = require('moment'),
-    defaultJson = require('./json/defaultValues'),
+    jsonValues = require('./consts/jsonValues'),
     session = require('express-session');
 
 var port = process.env.PORT || 8080,
@@ -44,13 +44,13 @@ app.get('/HotsLogs', function(req, res) {
     // Default display in App Store
     if (isEmptyObject(req.query)) {
 
-        res.status(200).json(JSON.parse(defaultJson.defaultHots));
+        res.status(200).json(JSON.parse(jsonValues.defaultHots));
     } else {
 
         HotsLogApi.getPlayerStats(req.headers, req.query).then(function(jsonHots) {
 
             return LaMetricApi.buildHotsResponse(req, jsonHots).then(function(jsonResponse) {
-                console.log("To LaMetric : ", jsonResponse);
+                console.log("To LaMetric HotsLogs : ", jsonResponse);
                 console.log();
                 return res.status(200).json(jsonResponse);
             });
@@ -70,13 +70,13 @@ app.get('/EthWallet', function(req, res) {
 
     //console.log(req.query.wallet);
     if (isEmptyObject(req.query)) {
-        return res.status(200).json(JSON.parse(defaultJson.defaultEthWallet));
+        return res.status(200).json(JSON.parse(jsonValues.defaultEthWallet));
     } else
     if (CryptoApi.isValidEthWallet(req.query.wallet)) {
-        console.log("valid address");
+
         CryptoApi.getEthBalance(req.headers, req.query).then(function(walletBalance) {
             return LaMetricApi.buildEthResponse(req, walletBalance).then(function(jsonResponse) {
-                console.log("To LaMetric : ", jsonResponse);
+                console.log("To LaMetric EthWallet : ", jsonResponse);
                 console.log();
                 return res.status(200).json(jsonResponse);
             });
@@ -86,7 +86,7 @@ app.get('/EthWallet', function(req, res) {
             console.log(err);
         });
     } else {
-        return res.status(200).json(JSON.parse(defaultJson.errorEthWallet));
+        return res.status(200).json(JSON.parse(jsonValues.errorEthWallet));
     }
 });
 
@@ -97,11 +97,15 @@ app.get('/NanoPool', function(req, res) {
     console.log(req.query);
     console.log("------------------------------------------");
 
-    NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
+    NanoPoolApi.getMiningStatsNEW(req.headers, req.query).then(function(jsonMiningStats) {
 
+        console.log();
+        console.log("-----++++++++++++++--------");
+        console.log(jsonMiningStats);
+        console.log("-----++++++++++++++--------");
+        console.log();
         return LaMetricApi.buildNanoResponse(req, jsonMiningStats).then(function(jsonResponse) {
-            //req.session.wallet = jsonResponse;
-            console.log("To LaMetric : ", jsonResponse);
+            console.log("To LaMetric NanoPool : ", jsonResponse);
             console.log();
             return res.status(200).json(jsonResponse);
         });
