@@ -97,13 +97,13 @@ app.get('/NanoPool', function(req, res) {
     console.log(req.query);
     console.log("------------------------------------------");
 
-    NanoPoolApi.getMiningStatsNEW(req.headers, req.query).then(function(jsonMiningStats) {
+    NanoPoolApi.getMiningStats(req.headers, req.query).then(function(jsonMiningStats) {
 
-        console.log();
-        console.log("-----++++++++++++++--------");
-        console.log(jsonMiningStats);
-        console.log("-----++++++++++++++--------");
-        console.log();
+        // console.log();
+        // console.log("-----++++++++++++++--------");
+        // console.log(jsonMiningStats);
+        // console.log("-----++++++++++++++--------");
+        // console.log();
         return LaMetricApi.buildNanoResponse(req, jsonMiningStats).then(function(jsonResponse) {
             console.log("To LaMetric NanoPool : ", jsonResponse);
             console.log();
