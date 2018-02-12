@@ -32,6 +32,13 @@ var defaultEthWallet = `
         "icon": "i555"
     }]
 }`;
+var unknowNanoAccount = `{
+    "frames": [
+    {
+        "text": "Account not found",
+        "icon": "i555"
+    }]
+}`;
 var errorEthWallet = `
 {
     "frames": [
@@ -40,9 +47,14 @@ var errorEthWallet = `
         "icon": "i555"
     }]
 }`;
+var walletIntroFrameRaw = '{ "index": 0, "text": "EthWallet", "icon": null}';
+var walletIntroFrame = JSON.parse(walletIntroFrameRaw);
+
 module.exports = {
     defaultHots,
     defaultNano,
     defaultEthWallet,
-    errorEthWallet
+    errorEthWallet,
+    walletIntroFrame,
+    unknowNanoAccount
 };
