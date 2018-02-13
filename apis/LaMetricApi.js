@@ -83,27 +83,27 @@ module.exports = {
                         };
                         switch (element.LeagueID) {
                             case 0:
+                                frame.icon = iconValues.master;
                                 frame.text = "Master";
-                                frame.icon = "i635"; // Master icon
                                 break;
                             case 1:
-                                frame.icon = "i5273"; // Diams icon
+                                frame.icon = iconValues.diamond;
                                 frame.text = "Diams";
                                 break;
                             case 2:
-                                frame.icon = "i5271"; // Plat icon
+                                frame.icon = iconValues.platinum;
                                 frame.text = "Plat";
                                 break;
                             case 3:
-                                frame.icon = "i5274"; // Gold icon
+                                frame.icon = iconValues.gold;
                                 frame.text = "Gold";
                                 break;
                             case 4:
-                                frame.icon = "i5270"; // Silver icon
+                                frame.icon = iconValues.silver;
                                 frame.text = "Silver";
                                 break;
                             case 5:
-                                frame.icon = "i5269"; // Bronze icon
+                                frame.icon = iconValues.bronze;
                                 frame.text = "Bronze";
                                 break;
                         }
