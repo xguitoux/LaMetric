@@ -21,7 +21,7 @@ module.exports = {
                 break;
         }
 
-        var url = "https://api.hotslogs.com/Public/Players/" + regionCode + "/" + battleTag;
+        var url = "https://www.hotslogs.com/api/Players/" + regionCode + "/" + battleTag;
 
         return jsonApi.getData(url, headers, parameters);
     },
