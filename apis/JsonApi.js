@@ -1,7 +1,3 @@
-// import { isNullOrUndefined } from 'util';
-var util = require('util');
-var request = require('request');
-var Promise = require("bluebird");
 var rp = require('request-promise');
 module.exports = {
     /**
